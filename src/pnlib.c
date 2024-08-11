@@ -37,7 +37,7 @@ int pn_eval(Stack* sk_ptr, const char* expr)
 {
   Stack tmp_num;
   tmp_num = sk_init(&tmp_num);
-  
+
   /* initialize place value counter for digits */
   int exp = 0;
   for (int i = 0; expr[i] != '\0'; i++)
@@ -53,7 +53,7 @@ int pn_eval(Stack* sk_ptr, const char* expr)
     {
       if (!isdigit(expr[i-1])) /* skips this parsing operation steps if we just finish an evaluation*/
         continue;
-      
+
       int dec = 1; /* with rightmost digit as top of stack, starts with 10^0 */
       int sum = 0;
 
