@@ -1,5 +1,6 @@
 /* RPN stack user-defined header definition */
 
+#include <stdio.h>
 #include "stacklib.h"
 
 /* Initialize new stack */
@@ -55,4 +56,14 @@ bool sk_isempty(Stack sk)
 int sk_size(Stack sk)
 {
   return sk.cpos+1;
+}
+
+/* Print entire stack for debugging */
+void sk_print(Stack sk)
+{
+  for (int i = 0; i < sk_size(sk); i++)
+  {
+    printf("%d ", sk.array[i]);
+  }
+  printf("\n");
 }

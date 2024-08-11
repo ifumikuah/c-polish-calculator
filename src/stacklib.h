@@ -17,5 +17,6 @@ int sk_pop(Stack* sk_ptr);
 int sk_peek(Stack sk);
 bool sk_isempty(Stack sk);
 int sk_size(Stack sk);
+void sk_print(Stack sk);
 
 #endif
