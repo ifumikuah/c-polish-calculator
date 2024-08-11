@@ -32,7 +32,7 @@ int bin_eval(int n1, int n2, char op)
   }
 }
 
-/* Evaluate `expr` string with space delimiter as RPN expression */
+/* Evaluate `expr` string as RPN expression (space delimiter) */
 int pn_eval(Stack* sk_ptr, const char* expr)
 {
   Stack tmp_num;
