@@ -18,5 +18,6 @@ int sk_peek(Stack sk);
 bool sk_isempty(Stack sk);
 int sk_size(Stack sk);
 void sk_print(Stack sk);
+void sk_sprint(Stack sk);
 
 #endif

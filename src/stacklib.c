@@ -67,3 +67,23 @@ void sk_print(Stack sk)
   }
   printf("\n");
 }
+
+/* Convert stack to string for debugging */
+void sk_sprint(Stack sk)
+{
+  char n_str[sk_size(sk)+1];
+  for (int i = 0; i < sk_size(sk); i++)
+  {
+    if (sk.array[i] > -1 && sk.array[i] < 10)
+    {
+      n_str[i] = sk.array[i]+'0';
+    }
+    else
+    {
+      n_str[i] = sk.array[i];
+    }
+  }
+  n_str[sk_size(sk)] = '\0';
+
+  printf("%s", n_str);
+}

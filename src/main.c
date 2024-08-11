@@ -20,7 +20,7 @@ int main(int argc, char** argv)
   Stack opstack = sk_init(&opstack);
   Stack rpnstack = sk_init(&opstack);
 
-  char* expr = "2+3*2";
+  char* expr = "4+4/2*2-1";
 
   for (int i = 0; i < expr[i] != '\0'; i++)
   {
@@ -43,8 +43,8 @@ int main(int argc, char** argv)
     sk_push(&rpnstack, sk_pop(&opstack));
   }
   
-  sk_print(rpnstack);
-  sk_print(opstack);
+  // sk_print(rpnstack);
+  sk_sprint(rpnstack);
   return 0;
 }
 
