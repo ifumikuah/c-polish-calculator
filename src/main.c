@@ -12,57 +12,63 @@ struct Opred
   short rank;
 };
 
-bool opred(const char op_a, const char op_b);
+int opred(const char op);
+bool op_ge(const char op_a, const char op_b);
+bool op_gt(const char op_a, const char op_b);
 
 int main(int argc, char** argv)
 {
-  Stack numstack = sk_init(&numstack);
-  Stack opstack = sk_init(&opstack);
-  Stack rpnstack = sk_init(&opstack);
+  const char* expr = "6+5*3/5+8";
 
-  char* expr = "4+4/2*2-1";
+  Stack op = sk_init(&op);
 
-  for (int i = 0; i < expr[i] != '\0'; i++)
+  for (int i = 0; expr[i] != '\0'; i++)
   {
     if (isdigit(expr[i]))
     {
-      sk_push(&rpnstack, expr[i]-'0');
-      // sk_print(rpnstack);
+      printf("%c", expr[i]);
     }
-    else if (!isdigit(expr[i]) && expr[i] != ' ')
+    else if (opred(expr[i]) != -1)
     {
-      while (!sk_isempty(opstack) && opred(sk_peek(opstack), expr[i]))
+      while (!sk_isempty(op) && op_ge(sk_peek(op), expr[i]))
       {
-        sk_push(&rpnstack, sk_pop(&opstack));
+        printf("%c", sk_pop(&op));
       }
-      sk_push(&opstack, expr[i]);
+      sk_push(&op, expr[i]);
     }
+    // printf(" ");
   }
-  while (!sk_isempty(opstack))
-  {
-    sk_push(&rpnstack, sk_pop(&opstack));
-  }
+  printf("%c", sk_pop(&op));
   
-  // sk_print(rpnstack);
-  sk_sprint(rpnstack);
   return 0;
 }
 
 
-/* Returns `true` if operator `op_a` precedence higher than `op_b`. */
-bool opred(const char op_a, const char op_b)
+/* Returns `true` if operator `op_a` precedence greather than equal `op_b`. */
+bool op_ge(const char op_a, const char op_b)
 {
-  const struct Opred add = {.op = '+', .rank = 1};
-  const struct Opred sub = {.op = '-', .rank = 1};
-  const struct Opred mul = {.op = '*', .rank = 2};
-  const struct Opred div = {.op = '/', .rank = 2};
+  if (opred(op_a) >= opred(op_b))
+    return true;
+  return false;
+}
 
-  const struct Opred ops[] = {add, sub, mul, div};
-  const int opslen = sizeof(ops) / sizeof(struct Opred);
+/* Returns `true` if operator `op_a` precedence greather than `op_b`. */
+bool op_gt(const char op_a, const char op_b)
+{
+  if (opred(op_a) > opred(op_b))
+    return true;
+  return false;
+}
 
-  for (int i = 0; i < opslen; i++)
-    if (ops[i].op == op_a)
-      for (int j = 0; j < opslen; j++)
-        if (ops[j].op == op_b)
-          return ops[i].rank > ops[j].rank;
+/* Returns precedence of operator, greater the number higher the precedence */
+int opred(const char c)
+{
+  if (c == '^')
+    return 3;
+  if (c == '/' || c == '*')
+    return 2;
+  if (c == '-' || c == '+')
+    return 1;
+
+  return -1;
 }

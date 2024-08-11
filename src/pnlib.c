@@ -12,15 +12,15 @@ int bin_eval(int n1, int n2, char op)
   switch (op)
   {
   case '-':
-    return n1 - n2;
+    return n2 - n1;
   case '+':
-    return n1 + n2;
+    return n2 + n1;
   case '*':
-    return n1 * n2;
+    return n2 * n1;
   case '/':
-    return n1 / n2;
+    return n2 / n1;
   case '%':
-    return n1 % n2;
+    return n2 % n1;
   case '^':
     int sum = 1;
     for (int i = 0; i != n2; i++)
