@@ -2,15 +2,19 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include "stacklib.h"
 #include "pnlib.h"
+
+#define MAXBUF 100
 
 void print_inpost(Stack* sk, const char* expr);
 void parse_dig(const char* expr);
 int opred(const char op);
 bool op_ge(const char op_a, const char op_b);
 bool op_gt(const char op_a, const char op_b);
+void intopr(const char* expr, char* buf);
 
 int main(int argc, char** argv)
 {
@@ -18,9 +22,52 @@ int main(int argc, char** argv)
   const char* expr2 = "9 2 {43}{35} 2";
   Stack pr = sk_init(&pr);
 
-  parse_dig(expr2);
+  char exp_buf[MAXBUF];
+  intopr("68 + 90 - (4*5)", exp_buf);
+
+  printf("%s\n", exp_buf);
 
   return 0;
+}
+
+/* Generate postfix string from infix expression */
+void intopr(const char* expr, char* buf)
+{
+  Stack stack = sk_init(&stack);
+
+  int j = 0;
+  for (int i = 0; expr[i] != '\0'; i++)
+  {
+    if (isdigit(expr[i]) || expr[i] == ' ')
+    {
+      buf[j++] = expr[i];
+    }
+    else if (expr[i] == '(')
+    {
+      sk_push(&stack, expr[i]);
+    }
+    else if (expr[i] == ')')
+    {
+      while (!sk_isempty(stack) && sk_peek(stack) != '(')
+      {
+        buf[j++] = sk_pop(&stack);
+      }
+      sk_pop(&stack);
+    }
+    else if (opred(expr[i]) != -1)
+    {
+      while (!sk_isempty(stack) && op_ge(sk_peek(stack), expr[i]))
+      {
+        buf[j++] = sk_pop(&stack);
+      }
+      sk_push(&stack, expr[i]);
+    }
+  }
+  while (!sk_isempty(stack))
+  {
+    buf[j++] = sk_pop(&stack);
+  }
+  buf[j] = '\0';
 }
 
 /* Parse and print multidigit number wrapped by curly braces */
