@@ -8,19 +8,14 @@
 
 int main(int argc, char** argv)
 {
-  const char* expr = "7+5* 33 /5^1+(3-2)";
+  const char* expr = "(7+(3+2))*3";
   char expr_buf[100];
-  char* infix_buf[20] = {NULL};
+  char* postfix_buf[20] = {NULL};
 
   Stack op = sk_init(&op);
   reformat(expr, expr_buf);
-
-  infix_rpn(expr_buf, infix_buf);
-  for (int i = 0; infix_buf[i] != NULL; i++)
-  {
-    printf("%s ", infix_buf[i]);
-  }
+  infix_rpn(expr_buf, postfix_buf);
   
-  // printf("%s", expr_buf);
+  printf("%d\n", postfix_eval(postfix_buf));
   return 0;
 }

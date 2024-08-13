@@ -8,6 +8,26 @@
 #include "stacklib.h"
 #include "pnlib.h"
 
+/* Evaluate postfix expression */
+long postfix_eval(char* postfix[])
+{
+  Stack num = sk_init(&num);
+
+  for (int i = 0; postfix[i] != NULL; i++)
+  {
+    if (is_str_numeral(postfix[i]))
+    {
+      sk_push(&num, atol(postfix[i]));
+    }
+    else
+    {
+      int eval = bin_eval(sk_pop(&num), sk_pop(&num), postfix[i][0]);
+      sk_push(&num, eval);
+    }
+  }
+  return sk_pop(&num);
+}
+
 /* Evaluate binary expression */
 int bin_eval(int n1, int n2, char op)
 {
@@ -164,48 +184,6 @@ void reformat(const char* expr, char* buf)
   buf[j] = '\0';
 }
 
-/* Evaluate `expr` string with space delimiter as RPN expression */
-int pn_eval_(Stack *sk_ptr, const char *expr)
-{
-  Stack tmp_num;
-  tmp_num = sk_init(&tmp_num);
-
-  /* initialize place value counter for digits */
-  int exp = 0;
-  for (int i = 0; expr[i] != '\0'; i++)
-  {
-    if (isdigit(expr[i]))
-    {
-      /* pushing each digit into temporary value stack before parsing digits */
-      sk_push(&tmp_num, expr[i] - '0');
-      /* each digits increments the place value */
-      exp++;
-    }
-    else if (expr[i] == ' ' || opred(expr[i]) != -1) /* if space  encountered, we'll start parsing digits in `tmp_num` stack */
-    {
-      int dec = 1; /* with rightmost digit as top of stack, starts with 10^0 */
-      int sum = 0;
-
-      /* this will pop and sum the stack exponentially by ten until it reaches empty stack */
-      while (exp--)
-      {
-        sum += sk_pop(&tmp_num) * dec; /* review 'how decimal works' in order to understand this routine */
-        dec *= 10;
-      }
-      exp = 0; /* resets the place value counter */
-
-      /* pushes `tmp_num` parsed integer into real stack as operand */
-      sk_push(sk_ptr, sum);
-    }
-    if (expr[i] != ' ' && !isdigit(expr[i])) /* starts evaluate in the real stack if encounters operator charr */
-    {
-      sk_push(sk_ptr, bin_eval(sk_pop(sk_ptr), sk_pop(sk_ptr), expr[i]));
-    }
-  }
-
-  return sk_pop(sk_ptr);
-}
-
 /* Operator precedence */
 int opred(const char c)
 {
@@ -229,4 +207,27 @@ void c_to_str(const char c, char* buf)
 {
   buf[0] = c;
   buf[1] = '\0';
+}
+
+/* Returns `true` if operator `op_a` precedence greather than equal `op_b`. */
+bool op_ge(const char op_a, const char op_b)
+{
+  return opred(op_a) >= opred(op_b);
+}
+
+/* Returns `true` if operator `op_a` precedence greather than `op_b`. */
+bool op_gt(const char op_a, const char op_b)
+{
+  return opred(op_a) > opred(op_b);
+}
+
+/* Return `true` if all char in string contains numeral */
+bool is_str_numeral(const char* str)
+{
+  for (int i = 0; str[i] != '\0'; i++)
+  {
+    if (!isdigit(str[i]))
+      return false;
+  }
+  return true;
 }
