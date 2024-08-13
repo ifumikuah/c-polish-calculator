@@ -1,5 +1,7 @@
 /* RPN stack user-defined header definition */
 
+#include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include "stacklib.h"
 
@@ -31,7 +33,7 @@ int sk_pop(Stack* sk_ptr)
 {
   if (sk_ptr->cpos < 0)
     return sk_ptr->cpos;
-  
+
   sk_ptr->cpos--;
 
   return sk_ptr->array[1+sk_ptr->cpos];
@@ -86,4 +88,43 @@ void sk_sprint(Stack sk)
   n_str[sk_size(sk)] = '\0';
 
   printf("%s", n_str);
+}
+
+/* Initialize new string array */
+SStack ss_init(SStack* ss_ptr)
+{
+  ss_ptr->cpos = -1;
+  return *ss_ptr;
+}
+
+/* Push `str` to stack */
+void ss_push(SStack* ss_ptr, char* str)
+{
+  --ss_ptr->cpos;
+  strcpy(ss_ptr->array[ss_ptr->cpos], str);
+}
+
+/* Pop last in stack */
+char* ss_pop(SStack* ss_ptr)
+{
+  if (ss_ptr->cpos < 0)
+    return NULL;
+
+  ss_ptr->cpos--;
+  return ss_ptr->array[1+ss_ptr->cpos];
+}
+
+/* Read last item in stack */
+char* ss_peek(SStack* ss)
+{
+  if (ss->cpos < 0)
+    return NULL;
+  
+  return ss->array[ss->cpos];
+}
+
+/* Check if stack is empty */
+bool ss_isempty(SStack ss)
+{
+  return ss.cpos < 0;
 }

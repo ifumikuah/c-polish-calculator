@@ -11,7 +11,6 @@
 
 void print_inpost(Stack* sk, const char* expr);
 void parse_dig(const char* expr);
-int opred(const char op);
 bool op_ge(const char op_a, const char op_b);
 bool op_gt(const char op_a, const char op_b);
 void intopr(const char* expr, char* buf);
@@ -21,11 +20,12 @@ int main(int argc, char** argv)
   const char* expr = "8*(5^4+2)-6^2/(9*3)";
   const char* expr2 = "9 2 {43}{35} 2";
   Stack pr = sk_init(&pr);
+  Stack stc = sk_init(&stc);
 
   char exp_buf[MAXBUF];
-  intopr("68 + 90 - (4*5)", exp_buf);
+  intopr("68 + 90 - (4 * 5)", exp_buf);
 
-  printf("%s\n", exp_buf);
+  pn_eval("68 90 + 5 -");
 
   return 0;
 }
@@ -38,7 +38,7 @@ void intopr(const char* expr, char* buf)
   int j = 0;
   for (int i = 0; expr[i] != '\0'; i++)
   {
-    if (isdigit(expr[i]) || expr[i] == ' ')
+    if (isdigit(expr[i]))
     {
       buf[j++] = expr[i];
     }
@@ -56,6 +56,7 @@ void intopr(const char* expr, char* buf)
     }
     else if (opred(expr[i]) != -1)
     {
+      buf[j++] = ' ';
       while (!sk_isempty(stack) && op_ge(sk_peek(stack), expr[i]))
       {
         buf[j++] = sk_pop(&stack);
@@ -173,17 +174,4 @@ bool op_ge(const char op_a, const char op_b)
 bool op_gt(const char op_a, const char op_b)
 {
   return opred(op_a) > opred(op_b);
-}
-
-/* Returns precedence of operator, greater the number higher the precedence */
-int opred(const char c)
-{
-  if (c == '^')
-    return 3;
-  if (c == '/' || c == '*')
-    return 2;
-  if (c == '-' || c == '+')
-    return 1;
-
-  return -1;
 }
