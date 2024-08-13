@@ -1,21 +1,36 @@
 /* Reverse Polish (RPN) calculator - main*/
 
 #include <stdio.h>
-#include <ctype.h>
-#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
 #include "stacklib.h"
 #include "pnlib.h"
 
+#define MAXLEN 100
+
 int main(int argc, char** argv)
 {
-  const char* expr = "7+5*33/5^1+(3-2)";
-  char expr_buf[100];
-  char* postfix_buf[20] = {NULL};
+  if (argc == 1)
+  {
+    printf("Usage: %s [expression]\n", argv[0]);
+    printf("Example: %s 2+2+(3*2)\n", argv[0]);
+    return 0;
+  }
 
-  Stack op = sk_init(&op);
-  reformat(expr, expr_buf);
-  infix_rpn(expr_buf, postfix_buf);
+  char infix_buf[MAXLEN];
+  for (int i = 1; i < argc; i++)
+    strcat(infix_buf, argv[i]);
+  
+  char reformat_buf[MAXLEN];
+  char* postfix_buf[MAXLEN] = {NULL};
+  reformat(infix_buf, reformat_buf);
+  infix_rpn(reformat_buf, postfix_buf);
   
   printf("%d\n", postfix_eval(postfix_buf));
+  for (int i = 0; postfix_buf[i] != NULL; i++)
+  {
+    free(postfix_buf[i]);
+  }
+  
   return 0;
 }
