@@ -8,7 +8,7 @@
 
 int main(int argc, char** argv)
 {
-  const char* expr = "(7+(3+2))*3";
+  const char* expr = "7+5*33/5^1+(3-2)";
   char expr_buf[100];
   char* postfix_buf[20] = {NULL};
 
