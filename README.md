@@ -1,4 +1,4 @@
-# Reverse Polish (RPN) Calculator
+# Reverse Polish (RPN) Calculator (Experimental branch)
 
 Evaluate reverse polish notation in string.
 
@@ -19,6 +19,14 @@ Space as expression delimiters.
 
 - Parse numerical string into integer.
 - Evaluate two operand based on operator.
+
+## TODO
+
+### Infix-prefix (Infix-RPN) conversion
+
+- Testing operators priority based on enums
+- Better way on parsing multidigits
+- Handling parenthesis of infix expression
 
 ## Future Plans
 
